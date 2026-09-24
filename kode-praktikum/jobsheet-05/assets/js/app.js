@@ -2,6 +2,7 @@
 function initNavToggle() {
     const toggleBtn = document.getElementById("nav-toggle-btn");
     const nav = document.querySelector("header nav");
+
     if (!toggleBtn || !nav) return;
 
     toggleBtn.addEventListener("click", function () {
@@ -27,14 +28,20 @@ function initHapusConfirm() {
 function initTableFilter() {
     const input = document.getElementById("search-input");
     const table = document.querySelector(".table-responsive table");
+
     if (!input || !table) return;
 
     input.addEventListener("keyup", function () {
         const keyword = input.value.toLowerCase();
         const rows = table.querySelectorAll("tbody tr");
+
         rows.forEach(function (row) {
-            const teks = row.textContent.toLowerCase();
-            row.style.display = teks.includes(keyword) ? "" : "none";
+            const kolomJudul = row.querySelector("td");
+
+            if (kolomJudul) {
+                const judul = kolomJudul.textContent.toLowerCase();
+                row.style.display = judul.includes(keyword) ? "" : "none";
+            }
         });
     });
 }
@@ -76,6 +83,19 @@ function initValidasiForm() {
             valid = false;
         } else if (pengarang) {
             hapusError(pengarang);
+        }
+
+        const isbn = form.querySelector("[name='isbn']");
+
+        if (isbn && isbn.value.trim() !== "") {
+            const polaISBN = /^[0-9-]+$/;
+
+            if (!polaISBN.test(isbn.value.trim())) {
+                tampilkanError(isbn, "ISBN hanya boleh berisi angka dan tanda hubung.");
+                valid = false;
+            } else {
+                hapusError(isbn);
+            }
         }
 
         const tahun = form.querySelector("[name='tahun']");
